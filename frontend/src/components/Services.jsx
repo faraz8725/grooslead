@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Monitor,
   Megaphone,
@@ -6,42 +7,46 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
+import { API_URL } from "../config/api";
 import "../styles/Services.css";
 
-const services = [
-  {
-    number: "01",
-    icon: Monitor,
-    title: "Digital Solutions",
-    description:
-      "Modern digital experiences designed to make your business easier to discover and engage with.",
-  },
-  {
-    number: "02",
-    icon: Megaphone,
-    title: "Digital Marketing",
-    description:
-      "Strategic campaigns and communication that help your brand reach the right people.",
-  },
-  {
-    number: "03",
-    icon: Palette,
-    title: "Creative & Design",
-    description:
-      "Clean, thoughtful visual experiences that make your brand memorable.",
-  },
-  {
-    number: "04",
-    icon: Code2,
-    title: "Technology",
-    description:
-      "Reliable technology solutions built around your business goals and future growth.",
-  },
-];
+const iconMap = {
+  "Digital Solutions": Monitor,
+  "Digital Marketing": Megaphone,
+  "Creative & Design": Palette,
+  Technology: Code2,
+};
 
 function Services() {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch(`${API_URL}/services`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch services");
+        }
+
+        setServices(data.services || data);
+      } catch (error) {
+        console.error("Fetch services error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
   return (
-    <section className="services-section section-padding" id="services">
+    <section
+      className="services-section section-padding"
+      id="services"
+    >
       <div className="section-container">
         <div className="services-header">
           <div className="section-heading">
@@ -54,37 +59,51 @@ function Services() {
           </div>
 
           <p>
-            From strategy to execution, we bring creative thinking and digital
-            expertise together under one roof.
+            From strategy to execution, we bring creative thinking and
+            digital expertise together under one roof.
           </p>
         </div>
 
         <div className="services-grid">
-          {services.map((service) => {
-            const Icon = service.icon;
+          {loading ? (
+            <p>Loading services...</p>
+          ) : services.length === 0 ? (
+            <p>No services available.</p>
+          ) : (
+            services.map((service, index) => {
+              const Icon = iconMap[service.title] || Monitor;
 
-            return (
-              <article className="service-card" key={service.number}>
-                <div className="service-top">
-                  <span className="service-number">{service.number}</span>
+              return (
+                <article
+                  className="service-card"
+                  key={service._id}
+                >
+                  <div className="service-top">
+                    <span className="service-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
 
-                  <div className="service-icon">
-                    <Icon size={22} />
+                    <div className="service-icon">
+                      <Icon size={22} />
+                    </div>
                   </div>
-                </div>
 
-                <div className="service-content">
-                  <h3>{service.title}</h3>
+                  <div className="service-content">
+                    <h3>{service.title}</h3>
 
-                  <p>{service.description}</p>
-                </div>
+                    <p>{service.description}</p>
+                  </div>
 
-                <button className="service-arrow" aria-label={service.title}>
-                  <ArrowUpRight size={19} />
-                </button>
-              </article>
-            );
-          })}
+                  <button
+                    className="service-arrow"
+                    aria-label={service.title}
+                  >
+                    <ArrowUpRight size={19} />
+                  </button>
+                </article>
+              );
+            })
+          )}
         </div>
       </div>
     </section>

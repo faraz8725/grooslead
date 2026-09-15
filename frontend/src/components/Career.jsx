@@ -1,12 +1,44 @@
-import { ArrowRight, BriefcaseBusiness, Users, Rocket } from "lucide-react";
+import { useEffect, useState } from "react";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Users,
+  Rocket,
+} from "lucide-react";
+
+import { API_URL } from "../config/api";
 import "../styles/Career.css";
 
 function Career() {
+  const [careers, setCareers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const scrollToContact = () => {
     document.getElementById("contact")?.scrollIntoView({
       behavior: "smooth",
     });
   };
+
+  useEffect(() => {
+    const fetchCareers = async () => {
+      try {
+        const response = await fetch(`${API_URL}/careers`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch careers");
+        }
+
+        setCareers(data.careers || data);
+      } catch (error) {
+        console.error("Fetch careers error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCareers();
+  }, []);
 
   return (
     <section className="career-section section-padding" id="career">
@@ -25,30 +57,47 @@ function Career() {
               learning, creating, and solving meaningful problems.
             </p>
 
-            <button className="career-button" onClick={scrollToContact}>
+            <button
+              className="career-button"
+              onClick={scrollToContact}
+            >
               Talk to our team
               <ArrowRight size={18} />
             </button>
           </div>
 
           <div className="career-features">
-            <div>
-              <BriefcaseBusiness size={22} />
-              <h4>Real Opportunities</h4>
-              <p>Work on projects that create real business value.</p>
-            </div>
+            {loading ? (
+              <p>Loading career opportunities...</p>
+            ) : careers.length === 0 ? (
+              <p>No career opportunities available.</p>
+            ) : (
+              careers.map((career, index) => {
+                const icons = [
+                  BriefcaseBusiness,
+                  Users,
+                  Rocket,
+                ];
 
-            <div>
-              <Users size={22} />
-              <h4>Collaborative Culture</h4>
-              <p>Learn and grow with people who support your ideas.</p>
-            </div>
+                const Icon = icons[index % icons.length];
 
-            <div>
-              <Rocket size={22} />
-              <h4>Keep Growing</h4>
-              <p>Build skills while taking on new challenges.</p>
-            </div>
+                return (
+                  <div key={career._id}>
+                    <Icon size={22} />
+
+                    <h4>{career.title}</h4>
+
+                    <p>
+                      {career.description}
+                    </p>
+
+                    <small>
+                      {career.location} • {career.type}
+                    </small>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>

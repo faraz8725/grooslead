@@ -1,18 +1,61 @@
-
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Mail, Lock } from "lucide-react";
 import "../styles/Login.css";
+import { API_URL } from "../config/api";
 
 function Login() {
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Backend connect hone ke baad yahan API call hogi
-    alert("Login successful!");
+    setError("");
+    setLoading(true);
 
-    navigate("/");
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      if (data.user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,6 +82,12 @@ function Login() {
             <p>Login to continue to your account.</p>
           </div>
 
+          {error && (
+            <div className="auth-error">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleLogin}>
 
             <div className="input-group">
@@ -46,9 +95,13 @@ function Login() {
 
               <div className="input-wrapper">
                 <Mail size={18} />
+
                 <input
                   type="email"
+                  name="email"
                   placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -59,9 +112,13 @@ function Login() {
 
               <div className="input-wrapper">
                 <Lock size={18} />
+
                 <input
                   type="password"
+                  name="password"
                   placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -73,13 +130,20 @@ function Login() {
                 Remember me
               </label>
 
-              <button type="button" className="forgot-password">
+              <button
+                type="button"
+                className="forgot-password"
+              >
                 Forgot Password?
               </button>
             </div>
 
-            <button type="submit" className="auth-button">
-              Login
+            <button
+              type="submit"
+              className="auth-button"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
             </button>
 
           </form>
@@ -100,4 +164,3 @@ function Login() {
 }
 
 export default Login;
-

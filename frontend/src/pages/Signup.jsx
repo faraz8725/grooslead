@@ -1,18 +1,68 @@
-
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, User, Mail, Lock } from "lucide-react";
 import "../styles/Signup.css";
+import { API_URL } from "../config/api";
 
 function Signup() {
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    // Backend connect hone ke baad yahan API call hogi
-    alert("Account created successfully!");
+    setError("");
 
-    navigate("/login");
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${API_URL}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Signup failed");
+      }
+
+      alert("Account created successfully!");
+
+      navigate("/login");
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,6 +89,12 @@ function Signup() {
             <p>Join Grosslead Media and get started.</p>
           </div>
 
+          {error && (
+            <div className="auth-error">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSignup}>
 
             <div className="input-group">
@@ -49,7 +105,10 @@ function Signup() {
 
                 <input
                   type="text"
+                  name="name"
                   placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -63,7 +122,10 @@ function Signup() {
 
                 <input
                   type="email"
+                  name="email"
                   placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -77,8 +139,11 @@ function Signup() {
 
                 <input
                   type="password"
+                  name="password"
                   placeholder="Create a password"
                   minLength="6"
+                  value={formData.password}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -92,8 +157,11 @@ function Signup() {
 
                 <input
                   type="password"
+                  name="confirmPassword"
                   placeholder="Confirm your password"
                   minLength="6"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -101,13 +169,18 @@ function Signup() {
 
             <label className="terms-check">
               <input type="checkbox" required />
+
               <span>
                 I agree to the Terms & Conditions and Privacy Policy.
               </span>
             </label>
 
-            <button type="submit" className="auth-button">
-              Create Account
+            <button
+              type="submit"
+              className="auth-button"
+              disabled={loading}
+            >
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
 
           </form>
@@ -128,4 +201,3 @@ function Signup() {
 }
 
 export default Signup;
-
