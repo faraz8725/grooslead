@@ -1,0 +1,26 @@
+.signup-page {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.terms-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 5px 0 22px;
+  cursor: pointer;
+}
+
+.terms-check input {
+  margin-top: 3px;
+  accent-color: #2563eb;
+  flex-shrink: 0;
+}
+
+.terms-check span {
+  cursor: pointer;
+}
+

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import "../styles/Navbar.css";
+import { Link } from "react-router-dom";
+
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -54,6 +56,11 @@ function Navbar() {
           Contact Us
           <ArrowUpRight size={17} />
         </button>
+
+<Link to="/login" className="navbar-login">
+  Login
+</Link>
+
 
         <button
           className="menu-button"
