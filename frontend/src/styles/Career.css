@@ -1,0 +1,168 @@
+.career-section {
+  background: #f8fafc;
+}
+
+.career-wrapper {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 70px;
+
+  padding: 65px;
+
+  background: #0f172a;
+
+  border-radius: 28px;
+
+  overflow: hidden;
+}
+
+.career-wrapper::before {
+  content: "";
+
+  position: absolute;
+
+  width: 350px;
+  height: 350px;
+
+  right: -130px;
+  top: -180px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  box-shadow:
+    0 0 0 60px rgba(96, 165, 250, 0.03),
+    0 0 0 120px rgba(96, 165, 250, 0.02);
+}
+
+.career-content {
+  position: relative;
+  z-index: 2;
+}
+
+.career-content .section-label {
+  color: #60a5fa;
+}
+
+.career-content h2 {
+  max-width: 500px;
+
+  margin: 14px 0 18px;
+
+  color: white;
+
+  font-size: clamp(35px, 4vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -2.4px;
+}
+
+.career-content h2 span {
+  color: #60a5fa;
+}
+
+.career-content p {
+  max-width: 500px;
+
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.career-button {
+  margin-top: 28px;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 13px 18px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: white;
+  color: #0f172a;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.career-button:hover {
+  transform: translateY(-3px);
+  background: #eff6ff;
+}
+
+.career-features {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.career-features>div {
+  padding: 21px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.035);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.career-features>div:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.career-features svg {
+  color: #60a5fa;
+}
+
+.career-features h4 {
+  margin: 12px 0 5px;
+
+  color: white;
+
+  font-size: 15px;
+}
+
+.career-features p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 800px) {
+  .career-wrapper {
+    grid-template-columns: 1fr;
+    padding: 40px 30px;
+    gap: 45px;
+  }
+}
+
+@media (max-width: 500px) {
+  .career-wrapper {
+    padding: 35px 22px;
+    border-radius: 22px;
+  }
+}
