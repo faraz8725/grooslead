@@ -1,8 +1,19 @@
-import express from "express";
+/*import express from "express";
 import { createAdmin } from "../controllers/adminController.js";
 
 const router = express.Router();
 
 router.post("/create", createAdmin);
+
+export default router;  */
+
+import express from "express";
+import { getDashboardStats } from "../controllers/adminController.js";
+import { protect } from "../middleware/authMiddleware.js";
+import { adminOnly } from "../middleware/adminMiddleware.js";
+
+const router = express.Router();
+
+router.get("/stats", protect, adminOnly, getDashboardStats);
 
 export default router;

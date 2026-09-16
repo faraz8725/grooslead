@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import {
   BriefcaseBusiness,
   Users,
@@ -160,6 +160,256 @@ const AdminDashboard = () => {
                     <strong>Admin login</strong>
                     <p>Administrator logged in</p>
                     <small>Recently</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default AdminDashboard;  */
+
+
+import React, { useEffect, useState } from "react";
+import {
+  BriefcaseBusiness,
+  Users,
+  MessageSquare,
+  UserCheck,
+  Plus,
+  ArrowRight,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+import AdminSidebar from "../../components/admin/AdminSidebar";
+import AdminTopbar from "../../components/admin/AdminTopbar";
+import StatCard from "../../components/admin/StatCard";
+
+import { API_URL } from "../../config/api";
+
+import "../../styles/admin/AdminDashboard.css";
+
+const AdminDashboard = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [stats, setStats] = useState({
+    totalServices: 0,
+    openCareers: 0,
+    messages: 0,
+    totalUsers: 0,
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(`${API_URL}/admin/stats`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Failed to fetch dashboard stats"
+          );
+        }
+
+        setStats({
+          totalServices: data.totalServices || 0,
+          openCareers: data.openCareers || 0,
+          messages: data.messages || 0,
+          totalUsers: data.totalUsers || 0,
+        });
+      } catch (error) {
+        console.error("Dashboard stats error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  return (
+    <div className="admin-layout">
+      <AdminSidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+
+      <div className="admin-main">
+        <AdminTopbar setIsOpen={setIsOpen} />
+
+        <main className="dashboard-content">
+          <div className="dashboard-heading">
+            <div>
+              <span className="dashboard-label">
+                ADMIN DASHBOARD
+              </span>
+
+              <h1>Welcome back, Admin 👋</h1>
+
+              <p>
+                Manage your Grosslead Media website from one place.
+              </p>
+            </div>
+          </div>
+
+          <section className="stats-grid">
+            <StatCard
+              title="Total Services"
+              value={loading ? "..." : stats.totalServices}
+              description="Services available"
+              icon={<BriefcaseBusiness size={22} />}
+            />
+
+            <StatCard
+              title="Open Careers"
+              value={loading ? "..." : stats.openCareers}
+              description="Active job openings"
+              icon={<Users size={22} />}
+            />
+
+            <StatCard
+              title="Messages"
+              value={loading ? "..." : stats.messages}
+              description="New inquiries"
+              icon={<MessageSquare size={22} />}
+            />
+
+            <StatCard
+              title="Total Users"
+              value={loading ? "..." : stats.totalUsers}
+              description="Registered users"
+              icon={<UserCheck size={22} />}
+            />
+          </section>
+
+          <section className="dashboard-grid">
+            <div className="quick-actions-card">
+              <div className="section-heading">
+                <div>
+                  <h2>Quick Actions</h2>
+                  <p>
+                    Manage your website content quickly.
+                  </p>
+                </div>
+              </div>
+
+              <div className="quick-actions">
+                <button
+                  className="quick-action"
+                  onClick={() =>
+                    navigate("/admin/services")
+                  }
+                >
+                  <div className="quick-icon">
+                    <Plus size={21} />
+                  </div>
+
+                  <div>
+                    <strong>Add Service</strong>
+                    <span>
+                      Create a new company service
+                    </span>
+                  </div>
+
+                  <ArrowRight size={18} />
+                </button>
+
+                <button
+                  className="quick-action"
+                  onClick={() =>
+                    navigate("/admin/careers")
+                  }
+                >
+                  <div className="quick-icon">
+                    <Plus size={21} />
+                  </div>
+
+                  <div>
+                    <strong>Add Career</strong>
+                    <span>
+                      Create a new job opening
+                    </span>
+                  </div>
+
+                  <ArrowRight size={18} />
+                </button>
+
+                <button
+                  className="quick-action"
+                  onClick={() =>
+                    navigate("/admin/messages")
+                  }
+                >
+                  <div className="quick-icon">
+                    <MessageSquare size={21} />
+                  </div>
+
+                  <div>
+                    <strong>View Messages</strong>
+                    <span>
+                      Check customer inquiries
+                    </span>
+                  </div>
+
+                  <ArrowRight size={18} />
+                </button>
+              </div>
+            </div>
+
+            <div className="activity-card">
+              <div className="section-heading">
+                <div>
+                  <h2>Recent Activity</h2>
+                  <p>Latest admin activities.</p>
+                </div>
+              </div>
+
+              <div className="activity-list">
+                <div className="activity-item">
+                  <div className="activity-dot"></div>
+
+                  <div>
+                    <strong>Service management</strong>
+                    <p>
+                      Services are synced with database
+                    </p>
+                    <small>Live</small>
+                  </div>
+                </div>
+
+                <div className="activity-item">
+                  <div className="activity-dot"></div>
+
+                  <div>
+                    <strong>Career management</strong>
+                    <p>
+                      Career openings are synced with database
+                    </p>
+                    <small>Live</small>
+                  </div>
+                </div>
+
+                <div className="activity-item">
+                  <div className="activity-dot"></div>
+
+                  <div>
+                    <strong>Dashboard statistics</strong>
+                    <p>
+                      Statistics are loaded from database
+                    </p>
+                    <small>Live</small>
                   </div>
                 </div>
               </div>

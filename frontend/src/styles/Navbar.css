@@ -220,3 +220,156 @@
   border-radius: 10px;
   font-weight: 600;
 }
+
+/* =========================
+   PROFILE
+========================= */
+
+.navbar-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-button {
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #0f172a;
+  color: white;
+
+  display: grid;
+  place-items: center;
+
+  cursor: pointer;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.profile-button:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.profile-dropdown {
+  position: absolute;
+
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 260px;
+
+  padding: 10px;
+
+  background: white;
+
+  border: 1px solid #eaecf0;
+  border-radius: 14px;
+
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.14);
+
+  z-index: 1100;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  padding: 10px;
+  margin-bottom: 6px;
+}
+
+.profile-avatar {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: #0f172a;
+  color: white;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.profile-details {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.profile-details strong {
+  color: #101828;
+  font-size: 14px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-details span {
+  color: #667085;
+  font-size: 12px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-menu-item {
+  width: 100%;
+
+  border: none;
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 11px 10px;
+
+  border-radius: 9px;
+
+  color: #344054;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.profile-menu-item:hover {
+  background: #f8fafc;
+  color: #2563eb;
+}
+
+.logout-item {
+  color: #344054;
+}
+
+.logout-item:hover {
+  color: #dc2626;
+  background: #fef2f2;
+}
